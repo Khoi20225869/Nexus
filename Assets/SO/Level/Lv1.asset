@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a2db28f9073384a80109b4d536e3f5, type: 3}
   m_Name: Lv1
   m_EditorClassIdentifier: Assembly-CSharp::Game.Features.Level.Config.LevelDefinition
-  <Id>k__BackingField: 
-  <SceneName>k__BackingField: 
+  <Id>k__BackingField: Lv1
+  <SceneName>k__BackingField: Lv1
   <RecommendedPower>k__BackingField: 0

@@ -3,6 +3,7 @@ using Game.Features.Character.Application;
 using Game.Features.Economy.Application;
 using Game.Features.Inventory.Application;
 using Game.Features.Level.Application;
+using Game.Features.Level.Config;
 using Game.Features.Shop.Application;
 using Game.Features.Shop.Domain;
 using Game.Infrastructure.Save;
@@ -19,6 +20,7 @@ namespace Game.Bootstrap
         private readonly IShopService _shopService;
         private readonly ISceneFlowService _sceneFlowService;
         private readonly IProgressSaveService _progressSaveService;
+        private readonly LevelDatabase _levelDatabase;
 
         private readonly UnlockCharacterUseCase _unlockCharacterUseCase;
         private readonly SwitchCharacterUseCase _switchCharacterUseCase;
@@ -35,7 +37,8 @@ namespace Game.Bootstrap
             ILevelService levelService,
             IShopService shopService,
             ISceneFlowService sceneFlowService,
-            IProgressSaveService progressSaveService)
+            IProgressSaveService progressSaveService,
+            LevelDatabase levelDatabase)
         {
             _characterService = characterService;
             _inventoryService = inventoryService;
@@ -44,6 +47,7 @@ namespace Game.Bootstrap
             _shopService = shopService;
             _sceneFlowService = sceneFlowService;
             _progressSaveService = progressSaveService;
+            _levelDatabase = levelDatabase;
 
             _unlockCharacterUseCase = new UnlockCharacterUseCase(_characterService);
             _switchCharacterUseCase = new SwitchCharacterUseCase(_characterService);
@@ -154,7 +158,58 @@ namespace Game.Bootstrap
         }
 
         public void GoToMetaScene() => _sceneFlowService.LoadMetaScene();
-        public void GoToGameplayScene() => _sceneFlowService.LoadGameplayScene();
+        public void GoToGameplayScene()
+        {
+            var levelSceneName = ResolveCurrentLevelSceneName();
+            if (!string.IsNullOrWhiteSpace(levelSceneName))
+            {
+                _sceneFlowService.LoadScene(levelSceneName);
+                return;
+            }
+
+            var firstLevel = GetFirstLevelDefinition();
+            if (firstLevel != null && !string.IsNullOrWhiteSpace(firstLevel.Id))
+            {
+                UnlockLevel(firstLevel.Id);
+                if (StartLevel(firstLevel.Id) && !string.IsNullOrWhiteSpace(firstLevel.SceneName))
+                {
+                    _sceneFlowService.LoadScene(firstLevel.SceneName);
+                    return;
+                }
+            }
+
+            _sceneFlowService.LoadGameplayScene();
+        }
+
+        public void CompleteCurrentLevelAndAdvance()
+        {
+            var completedLevelId = _levelService.CurrentLevelId;
+            CompleteCurrentLevel();
+
+            var nextLevel = GetNextLevelDefinition(completedLevelId);
+            if (nextLevel == null || string.IsNullOrWhiteSpace(nextLevel.Id))
+            {
+                GoToMetaScene();
+                return;
+            }
+
+            UnlockLevel(nextLevel.Id);
+            if (!StartLevel(nextLevel.Id))
+            {
+                GoToMetaScene();
+                return;
+            }
+
+            var sceneName = nextLevel.SceneName;
+            if (string.IsNullOrWhiteSpace(sceneName))
+            {
+                GoToMetaScene();
+                return;
+            }
+
+            _sceneFlowService.LoadScene(sceneName);
+        }
+
         public void LoadScene(string sceneName) => _sceneFlowService.LoadScene(sceneName);
 
         public void SaveProgress()
@@ -179,6 +234,65 @@ namespace Game.Bootstrap
             }
 
             return data;
+        }
+
+        private string ResolveCurrentLevelSceneName()
+        {
+            var level = GetLevelDefinition(_levelService.CurrentLevelId);
+            return level != null ? level.SceneName : string.Empty;
+        }
+
+        private LevelDefinition GetNextLevelDefinition(string levelId)
+        {
+            if (_levelDatabase == null || _levelDatabase.Levels == null || _levelDatabase.Levels.Count == 0)
+            {
+                return null;
+            }
+
+            for (var i = 0; i < _levelDatabase.Levels.Count; i++)
+            {
+                var level = _levelDatabase.Levels[i];
+                if (level == null || level.Id != levelId)
+                {
+                    continue;
+                }
+
+                for (var j = i + 1; j < _levelDatabase.Levels.Count; j++)
+                {
+                    var nextLevel = _levelDatabase.Levels[j];
+                    if (nextLevel != null)
+                    {
+                        return nextLevel;
+                    }
+                }
+
+                return null;
+            }
+
+            return _levelDatabase.Levels[0];
+        }
+
+        private LevelDefinition GetLevelDefinition(string levelId)
+        {
+            return _levelDatabase != null ? _levelDatabase.GetById(levelId) : null;
+        }
+
+        private LevelDefinition GetFirstLevelDefinition()
+        {
+            if (_levelDatabase == null || _levelDatabase.Levels == null)
+            {
+                return null;
+            }
+
+            for (var i = 0; i < _levelDatabase.Levels.Count; i++)
+            {
+                if (_levelDatabase.Levels[i] != null)
+                {
+                    return _levelDatabase.Levels[i];
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Game.Features.Level.Application
             if (!string.IsNullOrWhiteSpace(starterLevelId))
             {
                 _unlockedLevels.Add(starterLevelId);
+                CurrentLevelId = starterLevelId;
             }
         }
 

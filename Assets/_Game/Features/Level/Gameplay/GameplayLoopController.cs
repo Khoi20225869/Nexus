@@ -1,4 +1,5 @@
 using System;
+using System;
 using System.Collections;
 using Game.Bootstrap;
 using Game.Features.Character.Config;
@@ -75,8 +76,7 @@ namespace Game.Features.Level.Gameplay
             }
 
             GameInstaller.Facade.AddGold(levelCompleteGoldReward);
-            GameInstaller.Facade.CompleteCurrentLevel();
-            GameInstaller.Facade.GoToMetaScene();
+            GameInstaller.Facade.CompleteCurrentLevelAndAdvance();
         }
 
         private void SpawnActiveCharacter()
@@ -137,6 +137,7 @@ namespace Game.Features.Level.Gameplay
             var spawnPos = playerSpawnPoint != null ? playerSpawnPoint.position : Vector3.zero;
             _spawnedPlayer = UnityEngine.Object.Instantiate(matchedDefinition.Prefab, spawnPos, Quaternion.identity);
             EnsureRuntimeControllers(_spawnedPlayer);
+            EnsureCameraFollowTarget(_spawnedPlayer.transform);
             Debug.Log("GameplayLoopController: spawned player " + matchedDefinition.Id + " at " + spawnPos);
         }
 
@@ -174,6 +175,22 @@ namespace Game.Features.Level.Gameplay
             {
                 playerInstance.AddComponent<PlayerLocomotionAnimatorDriver>();
             }
+        }
+
+        private static void EnsureCameraFollowTarget(Transform target)
+        {
+            if (target == null || Camera.main == null)
+            {
+                return;
+            }
+
+            var cameraFollow = Camera.main.GetComponent<GameplayCameraFollow>();
+            if (cameraFollow == null)
+            {
+                cameraFollow = Camera.main.gameObject.AddComponent<GameplayCameraFollow>();
+            }
+
+            cameraFollow.SetTarget(target, snapImmediately: true);
         }
 
         private static bool WasKeyPressedThisFrame(KeyCode keyCode)

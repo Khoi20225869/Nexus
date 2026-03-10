@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95b981a2a249d8e46bb8c2b460cbca06, type: 3}
   m_Name: LevelDatabase
   m_EditorClassIdentifier: Assembly-CSharp::Game.Features.Level.Config.LevelDatabase
-  <Levels>k__BackingField: []
+  <Levels>k__BackingField:
+  - {fileID: 11400000, guid: a3110511e5509924da1ec3a69f75c4dd, type: 2}
+  - {fileID: 11400000, guid: 7e89464ea943cfb41b9f979670a01602, type: 2}

@@ -70,7 +70,8 @@ namespace Game.Bootstrap
                 levelService,
                 shopService,
                 sceneFlowService,
-                progressSaveService);
+                progressSaveService,
+                levelDatabase);
 
             serviceRegistry.Register<IGameEventBus>(eventBus);
             serviceRegistry.Register<ICurrencyService>(currencyService);
