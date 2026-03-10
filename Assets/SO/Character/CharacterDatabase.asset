@@ -14,3 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Features.Character.Config.CharacterDatabase
   <Characters>k__BackingField:
   - {fileID: 11400000, guid: fc9ec0abe76cd7c45aae4c8586617952, type: 2}
+  - {fileID: 11400000, guid: 4a366030b53ee184cbcef5360e5bf1f0, type: 2}
+  - {fileID: 11400000, guid: e8676e0f590a8c64986426726f9b2b31, type: 2}
+  - {fileID: 11400000, guid: 2d6598d763d512f4ea7ae303c6f8fffb, type: 2}
+  - {fileID: 11400000, guid: 7bce92e4bfcc95741b6f6503d23b7eb0, type: 2}
+  - {fileID: 11400000, guid: e456e4fc5852c3544b7a4072a8d01bd9, type: 2}
+  - {fileID: 11400000, guid: a7e4dd72cda1fe144b111c76bc862761, type: 2}
+  - {fileID: 11400000, guid: 8a7783e1dcf18c44581cc7289a0258f8, type: 2}
+  - {fileID: 11400000, guid: 0f39e048d27c05a4f8e1bd13abfc8df6, type: 2}
+  - {fileID: 11400000, guid: 947e8d757f16ad6428ee29c7289014ba, type: 2}

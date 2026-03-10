@@ -1,13 +1,11 @@
 using System;
+using System.Collections;
 using Game.Bootstrap;
 using Game.Features.Character.Config;
 using Game.Features.Level.Config;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-#endif
-#if UNITY_EDITOR
-using UnityEditor;
 #endif
 
 namespace Game.Features.Level.Gameplay
@@ -17,23 +15,48 @@ namespace Game.Features.Level.Gameplay
         [SerializeField] private Transform playerSpawnPoint;
         [SerializeField] private int levelCompleteGoldReward = 25;
         [SerializeField] private KeyCode completeLevelKey = KeyCode.K;
-        [SerializeField] private RuntimeAnimatorController fallbackAnimatorController;
 
         private CharacterDatabase _characterDatabase;
         private LevelDatabase _levelDatabase;
         private GameObject _spawnedPlayer;
+        private Coroutine _initializeRoutine;
 
-        private void Start()
+        private void OnEnable()
         {
+            _initializeRoutine = StartCoroutine(InitializeWhenReady());
+        }
+
+        private void OnDisable()
+        {
+            if (_initializeRoutine != null)
+            {
+                StopCoroutine(_initializeRoutine);
+                _initializeRoutine = null;
+            }
+        }
+
+        private IEnumerator InitializeWhenReady()
+        {
+            const float timeout = 2f;
+            var elapsed = 0f;
+
+            while ((GameInstaller.Services == null || GameInstaller.Facade == null) && elapsed < timeout)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
             if (GameInstaller.Services == null || GameInstaller.Facade == null)
             {
-                return;
+                Debug.LogWarning("GameplayLoopController: GameInstaller chua san sang, bo qua spawn player.");
+                yield break;
             }
 
             _characterDatabase = GameInstaller.Services.Resolve<CharacterDatabase>();
             _levelDatabase = GameInstaller.Services.Resolve<LevelDatabase>();
             SpawnActiveCharacter();
             EnsureCurrentLevelStarted();
+            _initializeRoutine = null;
         }
 
         private void Update()
@@ -64,24 +87,57 @@ namespace Game.Features.Level.Gameplay
             }
 
             var activeId = GameInstaller.Facade.ActiveCharacterId;
-            if (string.IsNullOrWhiteSpace(activeId))
+            CharacterDefinition matchedDefinition = null;
+
+            if (string.IsNullOrWhiteSpace(activeId) && _characterDatabase.Characters.Count > 0)
             {
-                return;
+                var firstCharacter = _characterDatabase.Characters[0];
+                activeId = firstCharacter != null ? firstCharacter.Id : string.Empty;
             }
 
             for (var i = 0; i < _characterDatabase.Characters.Count; i++)
             {
                 var def = _characterDatabase.Characters[i];
-                if (def == null || def.Id != activeId || def.Prefab == null)
+                if (def == null || def.Prefab == null)
                 {
                     continue;
                 }
 
-                var spawnPos = playerSpawnPoint != null ? playerSpawnPoint.position : Vector3.zero;
-                _spawnedPlayer = UnityEngine.Object.Instantiate(def.Prefab, spawnPos, Quaternion.identity);
-                EnsureRuntimeControllers(_spawnedPlayer, fallbackAnimatorController);
+                if (def.Id == activeId)
+                {
+                    matchedDefinition = def;
+                    break;
+                }
+            }
+
+            if (matchedDefinition == null)
+            {
+                for (var i = 0; i < _characterDatabase.Characters.Count; i++)
+                {
+                    var def = _characterDatabase.Characters[i];
+                    if (def != null && def.Prefab != null)
+                    {
+                        matchedDefinition = def;
+                        break;
+                    }
+                }
+            }
+
+            if (matchedDefinition == null)
+            {
+                Debug.LogWarning("GameplayLoopController: khong tim thay character prefab hop le de spawn.");
                 return;
             }
+
+            if (_spawnedPlayer != null)
+            {
+                Destroy(_spawnedPlayer);
+            }
+
+            var spawnPos = playerSpawnPoint != null ? playerSpawnPoint.position : Vector3.zero;
+            _spawnedPlayer = UnityEngine.Object.Instantiate(matchedDefinition.Prefab, spawnPos, Quaternion.identity);
+            EnsureRuntimeControllers(_spawnedPlayer);
+            Debug.Log("GameplayLoopController: spawned player " + matchedDefinition.Id + " at " + spawnPos);
         }
 
         private void EnsureCurrentLevelStarted()
@@ -107,27 +163,11 @@ namespace Game.Features.Level.Gameplay
             GameInstaller.Facade.StartLevel(fallbackLevel.Id);
         }
 
-        private static void EnsureRuntimeControllers(GameObject playerInstance, RuntimeAnimatorController fallbackController)
+        private static void EnsureRuntimeControllers(GameObject playerInstance)
         {
             if (playerInstance == null)
             {
                 return;
-            }
-
-            var animator = playerInstance.GetComponent<Animator>();
-            if (animator != null && animator.runtimeAnimatorController == null)
-            {
-#if UNITY_EDITOR
-                if (fallbackController == null)
-                {
-                    fallbackController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
-                        "Assets/Animators/Character Controller.controller");
-                }
-#endif
-                if (fallbackController != null)
-                {
-                    animator.runtimeAnimatorController = fallbackController;
-                }
             }
 
             if (playerInstance.GetComponent<PlayerLocomotionAnimatorDriver>() == null)

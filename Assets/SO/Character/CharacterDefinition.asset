@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c21978f099f894a8fef7176d852db3, type: 3}
   m_Name: CharacterDefinition
   m_EditorClassIdentifier: Assembly-CSharp::Game.Features.Character.Config.CharacterDefinition
-  <Id>k__BackingField: hero_knight
+  <Id>k__BackingField: Default
   <DisplayName>k__BackingField: Default
   <Prefab>k__BackingField: {fileID: 6355304382173323334, guid: 9a3406ddf1791104d9fed0b025edd8d4, type: 3}
