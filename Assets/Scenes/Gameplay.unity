@@ -279,6 +279,7 @@ MonoBehaviour:
   playerSpawnPoint: {fileID: 1230867514}
   levelCompleteGoldReward: 25
   completeLevelKey: 107
+  fallbackAnimatorController: {fileID: 9100000, guid: 2085e900bae8ec040808e8188cf31bee, type: 2}
 --- !u!4 &1445913558
 Transform:
   m_ObjectHideFlags: 0

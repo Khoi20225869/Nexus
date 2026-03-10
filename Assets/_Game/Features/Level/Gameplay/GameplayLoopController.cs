@@ -1,7 +1,14 @@
-﻿using Game.Bootstrap;
+using System;
+using Game.Bootstrap;
 using Game.Features.Character.Config;
 using Game.Features.Level.Config;
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Game.Features.Level.Gameplay
 {
@@ -10,6 +17,7 @@ namespace Game.Features.Level.Gameplay
         [SerializeField] private Transform playerSpawnPoint;
         [SerializeField] private int levelCompleteGoldReward = 25;
         [SerializeField] private KeyCode completeLevelKey = KeyCode.K;
+        [SerializeField] private RuntimeAnimatorController fallbackAnimatorController;
 
         private CharacterDatabase _characterDatabase;
         private LevelDatabase _levelDatabase;
@@ -30,7 +38,7 @@ namespace Game.Features.Level.Gameplay
 
         private void Update()
         {
-            if (Input.GetKeyDown(completeLevelKey))
+            if (WasKeyPressedThisFrame(completeLevelKey))
             {
                 CompleteLevelAndReturnMeta();
             }
@@ -70,7 +78,8 @@ namespace Game.Features.Level.Gameplay
                 }
 
                 var spawnPos = playerSpawnPoint != null ? playerSpawnPoint.position : Vector3.zero;
-                _spawnedPlayer = Object.Instantiate(def.Prefab, spawnPos, Quaternion.identity);
+                _spawnedPlayer = UnityEngine.Object.Instantiate(def.Prefab, spawnPos, Quaternion.identity);
+                EnsureRuntimeControllers(_spawnedPlayer, fallbackAnimatorController);
                 return;
             }
         }
@@ -96,6 +105,55 @@ namespace Game.Features.Level.Gameplay
 
             GameInstaller.Facade.UnlockLevel(fallbackLevel.Id);
             GameInstaller.Facade.StartLevel(fallbackLevel.Id);
+        }
+
+        private static void EnsureRuntimeControllers(GameObject playerInstance, RuntimeAnimatorController fallbackController)
+        {
+            if (playerInstance == null)
+            {
+                return;
+            }
+
+            var animator = playerInstance.GetComponent<Animator>();
+            if (animator != null && animator.runtimeAnimatorController == null)
+            {
+#if UNITY_EDITOR
+                if (fallbackController == null)
+                {
+                    fallbackController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                        "Assets/Animators/Character Controller.controller");
+                }
+#endif
+                if (fallbackController != null)
+                {
+                    animator.runtimeAnimatorController = fallbackController;
+                }
+            }
+
+            if (playerInstance.GetComponent<PlayerLocomotionAnimatorDriver>() == null)
+            {
+                playerInstance.AddComponent<PlayerLocomotionAnimatorDriver>();
+            }
+        }
+
+        private static bool WasKeyPressedThisFrame(KeyCode keyCode)
+        {
+#if ENABLE_INPUT_SYSTEM
+            var keyboard = Keyboard.current;
+            if (keyboard == null)
+            {
+                return false;
+            }
+
+            if (!Enum.TryParse(keyCode.ToString(), ignoreCase: true, out Key key))
+            {
+                return false;
+            }
+
+            return keyboard[key].wasPressedThisFrame;
+#else
+            return Input.GetKeyDown(keyCode);
+#endif
         }
     }
 }

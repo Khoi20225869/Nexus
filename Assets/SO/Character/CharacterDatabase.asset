@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e3e63e60936fb94f8f70cd1432499f0, type: 3}
   m_Name: CharacterDatabase
   m_EditorClassIdentifier: Assembly-CSharp::Game.Features.Character.Config.CharacterDatabase
-  <Characters>k__BackingField: []
+  <Characters>k__BackingField:
+  - {fileID: 11400000, guid: fc9ec0abe76cd7c45aae4c8586617952, type: 2}

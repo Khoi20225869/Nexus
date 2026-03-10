@@ -1,6 +1,10 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using Game.Bootstrap;
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace Game.Presentation.Debugging
 {
@@ -24,12 +28,12 @@ namespace Game.Presentation.Debugging
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.F1))
+            if (WasKeyPressedThisFrame(KeyCode.F1))
             {
                 _facade.AddGold(debugGoldAmount);
             }
 
-            if (Input.GetKeyDown(KeyCode.F2))
+            if (WasKeyPressedThisFrame(KeyCode.F2))
             {
                 var firstOffer = _facade.GetShopOffers().FirstOrDefault();
                 if (firstOffer != null)
@@ -38,32 +42,52 @@ namespace Game.Presentation.Debugging
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.F3))
+            if (WasKeyPressedThisFrame(KeyCode.F3))
             {
                 _facade.UnlockCharacter(testCharacterId);
                 _facade.SwitchCharacter(testCharacterId);
             }
 
-            if (Input.GetKeyDown(KeyCode.F4))
+            if (WasKeyPressedThisFrame(KeyCode.F4))
             {
                 _facade.UnlockLevel(testLevelId);
                 _facade.StartLevel(testLevelId);
             }
 
-            if (Input.GetKeyDown(KeyCode.F5))
+            if (WasKeyPressedThisFrame(KeyCode.F5))
             {
                 _facade.CompleteCurrentLevel();
             }
 
-            if (Input.GetKeyDown(KeyCode.F6))
+            if (WasKeyPressedThisFrame(KeyCode.F6))
             {
                 _facade.GoToMetaScene();
             }
 
-            if (Input.GetKeyDown(KeyCode.F7))
+            if (WasKeyPressedThisFrame(KeyCode.F7))
             {
                 _facade.GoToGameplayScene();
             }
+        }
+
+        private static bool WasKeyPressedThisFrame(KeyCode keyCode)
+        {
+#if ENABLE_INPUT_SYSTEM
+            var keyboard = Keyboard.current;
+            if (keyboard == null)
+            {
+                return false;
+            }
+
+            if (!Enum.TryParse(keyCode.ToString(), ignoreCase: true, out Key key))
+            {
+                return false;
+            }
+
+            return keyboard[key].wasPressedThisFrame;
+#else
+            return Input.GetKeyDown(keyCode);
+#endif
         }
     }
 }
