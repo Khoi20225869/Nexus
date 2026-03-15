@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyChase
   speed: 1
-  attackRange: 1.5
+  attackRange: 0.5
   attackHitbox: {fileID: 4767430714685093841}
   attackDelay: 0.5
   attackDuration: 0.3
