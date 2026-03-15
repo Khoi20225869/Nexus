@@ -8,6 +8,7 @@ using Game.Features.Shop.Application;
 using Game.Features.Shop.Domain;
 using Game.Infrastructure.Save;
 using Game.Infrastructure.Scenes;
+using UnityEngine;
 
 namespace Game.Bootstrap
 {
@@ -293,6 +294,20 @@ namespace Game.Bootstrap
             }
 
             return null;
+        }
+        
+        public void ResetGameProgress()
+        {
+            PlayerPrefs.DeleteAll(); 
+
+            var firstLevel = GetFirstLevelDefinition();
+            if (firstLevel != null)
+            {
+                _levelService.UnlockLevel(firstLevel.Id);
+                _startLevelUseCase.Execute(firstLevel.Id);
+            }
+
+            SaveProgress();
         }
     }
 }

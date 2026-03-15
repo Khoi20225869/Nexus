@@ -108,6 +108,18 @@ namespace Game.Presentation.Meta
             _selectedCharacterIndex = WrapIndex(_selectedCharacterIndex + 1, _characterDatabase.Characters.Count);
             ApplySelectedCharacter();
         }
+        
+        public void OnResetGamePressed()
+        {
+            if (GameInstaller.Facade == null)
+            {
+                Debug.LogWarning("GameFacade chua san sang");
+                return;
+            }
+
+            GameInstaller.Facade.ResetGameProgress();
+            Debug.Log("Game reset ve Level 1");
+        }
 
         private IEnumerator InitializeWhenReady()
         {
