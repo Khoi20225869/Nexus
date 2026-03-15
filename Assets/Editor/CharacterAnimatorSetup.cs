@@ -6,7 +6,7 @@ using UnityEngine;
 public static class CharacterAnimatorSetup
 {
     private const string ControllerPath = "Assets/Animators/Character Controller.controller";
-    private const string ClipRoot = "Assets/Animators/Charector Animation";
+    private const string ClipRoot = "Assets/Animators/Character Animation";
     private const string SetupKey = "Nexus.CharacterAnimatorSetup.Done";
 
     private const string MoveX = "MoveX";
