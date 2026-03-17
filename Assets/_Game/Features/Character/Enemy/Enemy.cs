@@ -27,8 +27,7 @@ public class Enemy : MonoBehaviour
         if (player == null) return;
 
         float distance = Vector2.Distance(transform.position, player.position);
-
-        // Player trong tầm → attack
+        
         if (distance <= attackRange)
         {
             rb.linearVelocity = Vector2.zero;
@@ -40,7 +39,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // Player ngoài tầm → chase
+            
             Vector2 direction = (player.position - transform.position).normalized;
             rb.linearVelocity = direction * speed;
         }

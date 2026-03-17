@@ -6,14 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="523a6fe5-5748-4172-b37d-1ed70f01fbab" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Nexus/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Nexus/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Animators/Character Animation/Character Controller.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animators/Character Animation/Character Controller.controller" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Animators/Character Controller.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animators/Character Controller.controller" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animators/Character Controller.controller.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animators/Character Controller.controller.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/CharacterAnimatorSetup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/CharacterAnimatorSetup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Character/Default.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Character/Default.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Enemy/Lvl 1/Slime 1.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Enemy/Lvl 1/Slime 1.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Enemy/Lvl 1/Slime 2.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Enemy/Lvl 1/Slime 2.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Lv/Lv1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Lv/Lv1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Features/Character/Application/PlayerAttackHitbox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Features/Character/Application/PlayerAttackHitbox.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Game/Features/Character/Enemy/Enemy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Features/Character/Enemy/Enemy.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Features/Level/Gameplay/EnemySpawner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Features/Level/Gameplay/EnemySpawner.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,6 +102,9 @@
       <workItem from="1773404795200" duration="3300000" />
       <workItem from="1773563149407" duration="779000" />
       <workItem from="1773579599915" duration="5914000" />
+      <workItem from="1773750857611" duration="1206000" />
+      <workItem from="1773752841464" duration="1280000" />
+      <workItem from="1773757409089" duration="1106000" />
     </task>
     <servers />
   </component>
